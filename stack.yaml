@@ -1,0 +1,22 @@
+resolver: lts-8.23
+
+docker:
+  enable: true
+
+packages:
+- '.'
+- location:
+    git: git@github.com:CthulhuDen/slack-rtm-state.git
+    commit: 261390a0460b57f6d8dfe1ddb69a57748cc7d3fd
+  extra-dep: true
+- location:
+    git: git@github.com:CthulhuDen/slack-api.git
+    commit: e18ee800b4302edc2bbe41a29314562b88ee7202
+  extra-dep: true
+
+# Dependency packages to be pulled from upstream that are not in the resolver
+# (e.g., acme-missiles-0.3)
+extra-deps: []
+
+# Override default flag values for local packages and extra-deps
+flags: {}
