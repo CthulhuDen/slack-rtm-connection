@@ -8,14 +8,11 @@ import Control.Lens ( (^.) )
 
 main :: IO ()
 main = do
-  tok <- getArgs >>= \case
-    []      -> error "Provide token as first argument"
-    (tok:_) -> return tok
-  withConnection tok $ \conn -> do
-    ch <- getNotifications conn
-    getEvent ch conn
+  tok <- fromMaybe (error "Provide token as first argument") . headMay <$> getArgs
+  withConnection tok $ \conn ->
+    getNotifications conn >>= getEvent conn
   where
-    getEvent ch conn = do
+    getEvent conn ch = do
       atomically (readTChan ch) >>= \case
         Connected s ->
           putStrLn $ "Connected as " <> s ^. slackSelf.selfName
@@ -26,4 +23,4 @@ main = do
           putStrLn "Received message"
         SlackEvent _ _ ->
           putStrLn "Event"
-      getEvent ch conn
+      getEvent conn ch
